@@ -12,4 +12,5 @@
     <string name="get_box_info">获取封签信息</string>
     <string name="get_data">获取数据</string>
     <string name="get_qr">获取二维码</string>
+    <string name="get_rfid">获取高频卡号</string>
 </resources>
