@@ -21,7 +21,7 @@ import java.util.Arrays;
  */
 public class FingerActivity extends BaseActivity implements View.OnClickListener {
     private final int DEV_ADDRESS = 0xffffffff;
-
+    private static final String TAG = "Reginer";
     private TextView mTvFinger;
     private ZAandroid a6 = new ZAandroid();
 
@@ -35,14 +35,18 @@ public class FingerActivity extends BaseActivity implements View.OnClickListener
 
     private void initView() {
         findViewById(R.id.get_finger).setOnClickListener(this);
+        findViewById(R.id.power).setOnClickListener(this);
         mTvFinger = findViewById(R.id.tv_finger);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.get_finger:
+            case R.id.power:
                 openDev();
+                break;
+            case R.id.get_finger:
+                charaTask.run();
                 break;
             default:
                 break;
@@ -62,13 +66,13 @@ public class FingerActivity extends BaseActivity implements View.OnClickListener
         a6.ZAZSetImageSize(imageSize);
         if (status == 1) {
             mTvFinger.setText(R.string.init_success);
-            charaTask.run();
         } else {
             mTvFinger.setText(R.string.init_failed);
             ZA_finger power = new ZA_finger();
             power.finger_power_off();
         }
     }
+
     private Runnable charaTask = new Runnable() {
         @Override
         public void run() {
@@ -96,6 +100,7 @@ public class FingerActivity extends BaseActivity implements View.OnClickListener
             }
         }
     };
+
     @Override
     protected void onDestroy() {
         PowerUtils.powerOff(PowerConstant.PATH, PowerConstant.GPIO);
