@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Function</string>
+    <string name="finger">指纹</string>
+    <string name="g_2_4">2.4G</string>
+    <string name="serial">串口</string>
+    <string name="qr">二维码</string>
+    <string name="r6">高频</string>
+    <string name="get_finger">获取指纹特征</string>
+    <string name="init_success">初始化成功</string>
+    <string name="init_failed">初始化失败</string>
+    <string name="get_chara_failed">获取指纹特征失败</string>
+    <string name="get_box_info">获取封签信息</string>
+    <string name="get_data">获取数据</string>
+    <string name="get_qr">获取二维码</string>
+</resources>
