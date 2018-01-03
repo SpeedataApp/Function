@@ -3,6 +3,7 @@ package com.spd.function;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.serialport.SerialPort;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -46,7 +47,7 @@ public class G24Activity extends BaseActivity implements View.OnClickListener {
                 mSerialPort = new SerialPort();
                 PowerUtils.powerOn(PowerConstant.PATH2_4, PowerConstant.GPIO2_4);
                 PowerUtils.openSerial(mSerialPort, PowerConstant.PORT2_4, PowerConstant.BAUD_RATE2_4);
-                mDisposable = Observable.interval(1, TimeUnit.SECONDS)
+                mDisposable = Observable.interval(0, 250, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(aLong -> readSerialPort());
                 break;
@@ -64,6 +65,7 @@ public class G24Activity extends BaseActivity implements View.OnClickListener {
         mSerialPort.writeSerialByte(mSerialPort.getFd(), FunUtils.hexString2Bytes(PowerConstant.POST_DATA_2_4));
         try {
             byte[] bytes = mSerialPort.readSerial(mSerialPort.getFd(), 1024);
+            Log.d("Reginer", "readSerialPort: " + FunUtils.bytesToHexString(bytes));
             byte[] temp = FunUtils.getParityData(bytes);
             if (temp == null) {
                 return;

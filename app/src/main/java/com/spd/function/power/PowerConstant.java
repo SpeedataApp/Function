@@ -17,7 +17,7 @@ public class PowerConstant {
     /**
      * 2.4G上电gpio，其他页面也要用到2.4G的话，可以直接使用这个，不要再创建
      */
-    public static final int[] GPIO2_4 = {93};
+    public static final int[] GPIO2_4 = {93,94};
 
     /**
      * 2.4G端口，其他页面也要用到2.4G的话，可以直接使用这个，不要再创建
