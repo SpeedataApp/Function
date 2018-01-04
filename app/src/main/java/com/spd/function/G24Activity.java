@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.spd.function.power.PowerConstant;
 import com.spd.function.power.PowerUtils;
 import com.spd.function.utils.FunUtils;
+import com.spd.function.utils.SoundUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -47,7 +48,7 @@ public class G24Activity extends BaseActivity implements View.OnClickListener {
                 mSerialPort = new SerialPort();
                 PowerUtils.powerOn(PowerConstant.PATH2_4, PowerConstant.GPIO2_4);
                 PowerUtils.openSerial(mSerialPort, PowerConstant.PORT2_4, PowerConstant.BAUD_RATE2_4);
-                mDisposable = Observable.interval(0, 250, TimeUnit.MILLISECONDS)
+                mDisposable = Observable.interval(0, 200, TimeUnit.SECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(aLong -> readSerialPort());
                 break;
@@ -65,7 +66,7 @@ public class G24Activity extends BaseActivity implements View.OnClickListener {
         mSerialPort.writeSerialByte(mSerialPort.getFd(), FunUtils.hexString2Bytes(PowerConstant.POST_DATA_2_4));
         try {
             byte[] bytes = mSerialPort.readSerial(mSerialPort.getFd(), 1024);
-            Log.d("Reginer", "readSerialPort: " + FunUtils.bytesToHexString(bytes));
+//            Log.d("Reginer", "readSerialPort: " + FunUtils.bytesToHexString(bytes));
             byte[] temp = FunUtils.getParityData(bytes);
             if (temp == null) {
                 return;
@@ -76,6 +77,13 @@ public class G24Activity extends BaseActivity implements View.OnClickListener {
             String sealCode = FunUtils.getSealCode(temp);
             //是否异常
             boolean isException = FunUtils.isException(temp);
+            if (isException) {
+                SoundUtils.playFound(this);
+                Log.d("Reginer", "readSerialPort: ----------------------------------");
+            } else {
+                Log.d("Reginer", "readSerialPort: -------------------11111111111111111111111---------------");
+                SoundUtils.playError(this);
+            }
             mResult.setText("封签号 ：" + sealNo + "\n" + "封签码:" + sealCode + "\n" + "是否异常：" + isException);
         } catch (Exception e) {
             e.printStackTrace();
