@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.spd.function.power.PowerConstant;
 import com.spd.function.power.PowerUtils;
 import com.spd.function.utils.FunUtils;
-import com.spd.function.utils.SoundUtils;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -67,22 +67,14 @@ public class G24Activity extends BaseActivity implements View.OnClickListener {
         try {
             byte[] bytes = mSerialPort.readSerial(mSerialPort.getFd(), 1024);
             Log.d("Reginer", "readSerialPort: " + FunUtils.bytesToHexString(bytes));
-            byte[] temp = FunUtils.getParityData(bytes);
-            if (temp == null) {
-                return;
+            Set<SerialEntity> entities = FunUtils.getParityDataList(bytes);
+            if (entities.size() > 0) {
+                StringBuilder builder = new StringBuilder();
+                for (SerialEntity entity : entities) {
+                    builder.append("号:").append(entity.getSealNo()).append("---").append("码:").append(entity.getSealCode()).append("---").append("异常：").append(entity.isException()).append("\n");
+                }
+                mResult.setText(builder.toString());
             }
-            //封签号
-            String sealNo = FunUtils.getSealNo(temp);
-            //封签码
-            String sealCode = FunUtils.getSealCode(temp);
-            //是否异常
-            boolean isException = FunUtils.isException(temp);
-            if (isException) {
-                SoundUtils.playError(this);
-            } else {
-                SoundUtils.playFound(this);
-            }
-            mResult.setText("封签号 ：" + sealNo + "\n" + "封签码:" + sealCode + "\n" + "是否异常：" + isException);
         } catch (Exception e) {
             e.printStackTrace();
         }

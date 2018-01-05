@@ -1,10 +1,14 @@
 package com.spd.function.utils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.spd.function.SerialEntity;
 import com.spd.function.power.PowerConstant;
 
 import java.math.BigInteger;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author :Reginer in  2017/12/29 10:54.
@@ -49,6 +53,34 @@ public class FunUtils {
             }
         }
         return null;
+    }
+
+    public static Set<SerialEntity> getParityDataList(byte[] bytes) {
+        Set<SerialEntity> serialEntities = new HashSet<>();
+        final int length = 14;
+        int flag = 0;
+        while (bytes.length - flag >= length) {
+//            byte[] temp = FunUtils.getParityData(sub(bytes, flag, bytes.length - flag));
+            for (int i = 0; i < bytes.length; i++) {
+                if (bytes.length - i >= length && PowerConstant.PARITY_DATA_2_4.equals
+                        (binary(sub(bytes, i, 4), 16))) {
+                    byte[] temp = sub(bytes, i, 14);
+                    if (temp == null) {
+                        return serialEntities;
+                    }
+                    //封签号
+                    String sealNo = FunUtils.getSealNo(temp);
+                    //封签码
+                    String sealCode = FunUtils.getSealCode(temp);
+                    //是否异常
+                    boolean isException = FunUtils.isException(temp);
+                    serialEntities.add(new SerialEntity(sealNo, sealCode, isException));
+                    flag = i + length;
+                }
+            }
+        }
+        Log.d("Reginer----------", "size is:::: " + serialEntities.size());
+        return serialEntities;
     }
 
     /**
