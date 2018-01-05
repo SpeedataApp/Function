@@ -1,7 +1,6 @@
 package com.spd.function.utils;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.spd.function.SerialEntity;
 import com.spd.function.power.PowerConstant;
@@ -60,10 +59,8 @@ public class FunUtils {
         final int length = 14;
         int flag = 0;
         while (bytes.length - flag >= length) {
-//            byte[] temp = FunUtils.getParityData(sub(bytes, flag, bytes.length - flag));
             for (int i = 0; i < bytes.length; i++) {
-                if (bytes.length - i >= length && PowerConstant.PARITY_DATA_2_4.equals
-                        (binary(sub(bytes, i, 4), 16))) {
+                if (bytes.length - i >= length && PowerConstant.PARITY_DATA_2_4.equals(binary(sub(bytes, i, 4), 16))) {
                     byte[] temp = sub(bytes, i, 14);
                     if (temp == null) {
                         return serialEntities;
@@ -76,10 +73,11 @@ public class FunUtils {
                     boolean isException = FunUtils.isException(temp);
                     serialEntities.add(new SerialEntity(sealNo, sealCode, isException));
                     flag = i + length;
+                } else {
+                    flag = i;
                 }
             }
         }
-        Log.d("Reginer----------", "size is:::: " + serialEntities.size());
         return serialEntities;
     }
 
