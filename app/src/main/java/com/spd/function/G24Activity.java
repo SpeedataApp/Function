@@ -73,6 +73,7 @@ public class G24Activity extends BaseActivity implements View.OnClickListener {
                 for (SerialEntity entity : entities) {
                     builder.append("号:").append(entity.getSealNo()).append("---").append("码:").append(entity.getSealCode()).append("---").append("异常：").append(entity.isException()).append("\n");
                 }
+                Log.d("Reginer", "data: "+builder.toString());
                 mResult.setText(builder.toString());
             }
         } catch (Exception e) {
